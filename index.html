@@ -1,0 +1,766 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Vira a Noite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg: #0A0C1F;
+    --bg-soft: #10132B;
+    --surface: #171B3C;
+    --surface-2: #1F244C;
+    --line: #2C3268;
+    --text: #F4F2FF;
+    --text-dim: #A6A8D4;
+    --text-faint: #6E71A8;
+    --accent: #FF4D82;
+    --accent-ink: #2A0416;
+    --amber: #FFC246;
+    --amber-ink: #2E1E00;
+    --violet: #9C87FF;
+    --teal: #35D6B4;
+    --radius: 14px;
+    --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
+    --font-body: "Manrope", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+  }
+  h1,h2,h3{ font-family: var(--font-display); letter-spacing: .01em; text-wrap: balance; margin: 0; }
+  p{ margin: 0; }
+  button{ font-family: inherit; cursor: pointer; }
+  a{ color: var(--amber); }
+  ::selection{ background: var(--accent); color: #fff; }
+
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding-inline: 20px;
+  }
+
+  /* ---------- background texture: distant city lights ---------- */
+  .sky{
+    position: relative;
+    overflow: clip;
+    background:
+      radial-gradient(1px 1px at 8% 20%, #ffffff55 0, transparent 60%),
+      radial-gradient(1px 1px at 22% 65%, #ffffff40 0, transparent 60%),
+      radial-gradient(1.5px 1.5px at 40% 15%, #ffffff55 0, transparent 60%),
+      radial-gradient(1px 1px at 60% 40%, #ffffff35 0, transparent 60%),
+      radial-gradient(1.5px 1.5px at 75% 70%, #ffffff45 0, transparent 60%),
+      radial-gradient(1px 1px at 90% 25%, #ffffff40 0, transparent 60%),
+      radial-gradient(1px 1px at 95% 80%, #ffffff30 0, transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  }
+
+  /* ---------- top bar ---------- */
+  header.topbar{
+    padding-block: 18px;
+  }
+  .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap: wrap; }
+  .logo{
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: .04em;
+    color: var(--text);
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo .dot{ color: var(--accent); }
+  .badge-beta{
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid var(--amber);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-block: 48px 40px; }
+  .marquee-frame{
+    border: 2px solid var(--amber);
+    border-radius: var(--radius);
+    padding: 34px 24px;
+    position: relative;
+    background: linear-gradient(180deg, #14173600, var(--surface) 130%);
+    box-shadow: 0 0 0 6px #0000, 0 30px 60px -30px #FF4D8255;
+  }
+  .marquee-frame::before, .marquee-frame::after{
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: calc(var(--radius) - 4px);
+    border: 1px dashed #FFC24655;
+    pointer-events: none;
+  }
+  .bulbs{
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--radius);
+    pointer-events: none;
+  }
+  .bulbs span{
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 6px 2px #FFC24699;
+    animation: blink 1.8s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce){ .bulbs span{ animation: none; } }
+  @keyframes blink{ 0%,100%{ opacity: 1; } 50%{ opacity: .25; } }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .hero h1{
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    line-height: .96;
+    color: var(--text);
+  }
+  .hero h1 em{
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hero-sub{
+    margin-top: 18px;
+    max-width: 56ch;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+  }
+  .hero-actions{
+    margin-top: 26px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn{
+    border-radius: 999px;
+    padding: 13px 22px;
+    font-weight: 700;
+    font-size: .92rem;
+    border: 1px solid transparent;
+    transition: transform .15s ease, background .15s ease;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn:hover{ transform: translateY(-1px); }
+  .btn:focus-visible{ outline: 2px solid var(--amber); outline-offset: 2px; }
+  .btn-primary{ background: var(--accent); color: #fff; }
+  .btn-primary:hover{ background: #ff6b98; }
+  .btn-ghost{ background: transparent; color: var(--text); border-color: var(--line); }
+  .btn-ghost:hover{ border-color: var(--amber); color: var(--amber); }
+
+  .hero-stat{
+    margin-top: 22px;
+    font-family: var(--font-mono);
+    font-size: .8rem;
+    color: var(--text-faint);
+  }
+
+  /* ---------- steps ---------- */
+  .steps{ padding-block: 10px 48px; }
+  .steps h2{ font-size: 1.9rem; color: var(--text); margin-bottom: 20px; }
+  .step-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 720px){ .step-grid{ grid-template-columns: 1fr; } }
+  .step{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .step-num{
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--amber);
+    line-height: 1;
+  }
+  .step h3{ font-size: 1.15rem; margin-top: 8px; color: var(--text); font-family: var(--font-body); font-weight: 800; }
+  .step p{ margin-top: 6px; color: var(--text-dim); font-size: .92rem; }
+
+  /* ---------- demo ---------- */
+  .demo{ padding-block: 10px 48px; }
+  .demo-head{ margin-bottom: 18px; }
+  .demo-head h2{ font-size: 1.9rem; }
+  .demo-head p{ color: var(--text-dim); margin-top: 8px; max-width: 60ch; }
+
+  .demo-form{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: end;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .field{ display: flex; flex-direction: column; gap: 6px; }
+  .field label{
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  select, input{
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: .92rem;
+    font-family: inherit;
+    min-width: 170px;
+  }
+  select:focus-visible, input:focus-visible{ outline: 2px solid var(--amber); outline-offset: 1px; }
+
+  .results-note{
+    margin-top: 18px;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    color: var(--text-faint);
+    letter-spacing: .02em;
+  }
+
+  .card-grid{
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .ticket{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform .15s ease, border-color .15s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .ticket:hover{ transform: translateY(-3px); border-color: var(--accent); }
+  .ticket-top{ padding: 16px 16px 14px; flex: 1; }
+  .type-badge{
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono);
+    font-size: .66rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: var(--surface-2);
+  }
+  .type-badge .dot{ width: 7px; height: 7px; border-radius: 50%; }
+  .ticket h3{
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin-top: 10px;
+    color: var(--text);
+  }
+  .ticket .venue{ margin-top: 4px; color: var(--text-dim); font-size: .88rem; }
+  .ticket .when{
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    color: var(--text-faint);
+  }
+  .ticket-stub{
+    border-top: 1px dashed var(--line);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface-2);
+    position: relative;
+  }
+  .ticket-stub::before, .ticket-stub::after{
+    content:""; position:absolute; top:-8px; width:16px; height:16px; border-radius:50%;
+    background: var(--bg);
+  }
+  .ticket-stub::before{ left:-8px; }
+  .ticket-stub::after{ right:-8px; }
+  .price{ font-family: var(--font-mono); font-size: .85rem; color: var(--text-dim); }
+  .go-btn{
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: .8rem;
+    font-weight: 700;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+  }
+  .go-btn:hover{ background: #ff6b98; }
+
+  /* ---------- signup / waitlist ---------- */
+  .waitlist{ padding-block: 10px 60px; }
+  .waitlist-card{
+    background: linear-gradient(155deg, var(--surface) 0%, var(--surface-2) 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 26px;
+  }
+  @media (max-width: 760px){ .waitlist-card{ grid-template-columns: 1fr; } }
+  .waitlist-copy h2{ font-size: 1.9rem; }
+  .waitlist-copy p{ color: var(--text-dim); margin-top: 10px; max-width: 44ch; }
+  .counter{
+    margin-top: 18px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--font-mono);
+    color: var(--amber);
+  }
+  .counter b{ font-size: 1.6rem; font-family: var(--font-display); letter-spacing: .02em; }
+  .counter span{ font-size: .78rem; color: var(--text-faint); }
+
+  form.signup{ display: flex; flex-direction: column; gap: 12px; }
+  form.signup .field{ width: 100%; }
+  form.signup input, form.signup select{ width: 100%; min-width: 0; }
+  .signup-context{
+    font-family: var(--font-mono);
+    font-size: .74rem;
+    color: var(--text-faint);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .signup-msg{
+    font-size: .85rem;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: none;
+  }
+  .signup-msg.show{ display: block; }
+  .signup-msg.ok{ background: #35D6B422; color: var(--teal); border: 1px solid #35D6B455; }
+  .signup-msg.err{ background: #FF4D8222; color: var(--accent); border: 1px solid #FF4D8255; }
+
+  /* ---------- modal ---------- */
+  .modal-overlay{
+    position: fixed; inset: 0;
+    background: #04051499;
+    backdrop-filter: blur(2px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 50;
+  }
+  .modal{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    max-width: 420px;
+    width: 100%;
+  }
+  .modal h3{ font-family: var(--font-body); font-weight: 800; font-size: 1.15rem; }
+  .modal p{ color: var(--text-dim); font-size: .88rem; margin-top: 8px; }
+  .modal-close{
+    background: transparent; border: 1px solid var(--line); color: var(--text-dim);
+    border-radius: 8px; padding: 6px 10px; font-size: .8rem; float: right;
+  }
+  .modal-close:hover{ color: var(--text); border-color: var(--amber); }
+
+  /* ---------- footer ---------- */
+  footer{ padding-block: 30px 60px; border-top: 1px solid var(--line); }
+  footer p{ color: var(--text-faint); font-size: .82rem; max-width: 64ch; }
+  footer .foot-brand{ font-family: var(--font-display); color: var(--text-dim); font-size: 1.1rem; margin-bottom: 8px; }
+</style>
+
+<div class="sky">
+  <div class="wrap">
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="logo">VIRA <span class="dot">A</span> NOITE</div>
+        <span class="badge-beta">MVP fumaça · validando a ideia</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="marquee-frame">
+        <div class="bulbs" id="bulbs"></div>
+        <p class="eyebrow">para quem chega numa cidade sem saber onde a noite acontece</p>
+        <h1>Descubra o que <em>rola à noite</em><br>onde quer que você esteja.</h1>
+        <p class="hero-sub">Shows, música ao vivo, peças de teatro e stand-up perto de você — organizados por horário, num só lugar, pra quem está de passagem e não conhece a agenda local.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="cta-demo">Testar com uma cidade</button>
+          <button class="btn btn-ghost" id="cta-lista">Entrar na lista de espera</button>
+        </div>
+        <p class="hero-stat" id="hero-stat">estamos coletando interesse antes de construir o app — sem cadastro, sem custo</p>
+      </div>
+    </section>
+
+    <section class="steps">
+      <h2>Como vai funcionar</h2>
+      <div class="step-grid">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Escolha cidade e data</h3>
+          <p>Chegou numa cidade nova ou está de viagem? Diga onde e quando.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Veja a agenda da noite</h3>
+          <p>Shows, música ao vivo, teatro e stand-up, com horário e faixa de preço.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Escolha e vá</h3>
+          <p>Marque interesse no que combina com você e receba lembrete antes do horário.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="demo" id="demo">
+      <div class="demo-head">
+        <h2>Teste com uma cidade</h2>
+        <p>Isto é uma prévia ilustrativa — os eventos abaixo são exemplos, não uma agenda real, só para mostrar como a busca funcionaria.</p>
+      </div>
+      <div class="demo-form">
+        <div class="field">
+          <label for="cidade">Cidade</label>
+          <select id="cidade"></select>
+        </div>
+        <div class="field">
+          <label for="data">Data</label>
+          <input type="date" id="data">
+        </div>
+        <button class="btn btn-primary" id="buscar">Buscar noite</button>
+      </div>
+      <p class="results-note" id="results-note"></p>
+      <div class="card-grid" id="card-grid"></div>
+    </section>
+
+    <section class="waitlist" id="lista">
+      <div class="waitlist-card">
+        <div class="waitlist-copy">
+          <h2>Quer ser avisado quando lançar?</h2>
+          <p>Ainda não construímos o app. Estamos medindo se essa dor é real antes de investir tempo nisso — deixe seu e-mail e sua cidade e avisamos quando (e se) o Vira a Noite chegar aí.</p>
+          <div class="counter" id="counter-wrap" hidden>
+            <b id="counter-num">0</b>
+            <span>pessoas já entraram na lista</span>
+          </div>
+        </div>
+        <form class="signup" id="signup-form">
+          <div class="signup-context" id="signup-context" hidden></div>
+          <div class="field">
+            <label for="nome">Nome (opcional)</label>
+            <input type="text" id="nome" autocomplete="name" placeholder="Como podemos te chamar">
+          </div>
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" autocomplete="email" placeholder="voce@email.com" required>
+          </div>
+          <div class="field">
+            <label for="cidade-lista">Sua cidade</label>
+            <select id="cidade-lista"></select>
+          </div>
+          <button type="submit" class="btn btn-primary">Quero ser avisado</button>
+          <p class="signup-msg" id="signup-msg"></p>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <div class="foot-brand">VIRA A NOITE</div>
+      <p>Este é um teste de fumaça: uma página simples para medir interesse real antes de desenvolver o produto. Os eventos exibidos são exemplos ilustrativos, e os dados enviados aqui são usados só para essa validação.</p>
+    </footer>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay" hidden>
+  <div class="modal">
+    <button class="modal-close" id="modal-close">fechar</button>
+    <h3 id="modal-title">Quero ir</h3>
+    <p id="modal-sub">Ainda estamos validando essa ideia. Deixe seu e-mail que avisamos você.</p>
+    <form class="signup" id="modal-form" style="margin-top:14px;">
+      <div class="field">
+        <label for="modal-nome">Nome (opcional)</label>
+        <input type="text" id="modal-nome" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="modal-email">E-mail</label>
+        <input type="email" id="modal-email" autocomplete="email" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Quero ser avisado</button>
+      <p class="signup-msg" id="modal-msg"></p>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- mock catalogue (illustrative only) ----------
+  var CIDADES = ["Fortaleza","Recife","Salvador","Rio de Janeiro","São Paulo","Belo Horizonte"];
+
+  var TIPOS = {
+    "Show": { cor: "var(--amber)" },
+    "Música ao vivo": { cor: "var(--accent)" },
+    "Teatro": { cor: "var(--violet)" },
+    "Stand-up": { cor: "var(--teal)" }
+  };
+
+  var EVENTOS = {
+    "Fortaleza": [
+      { tipo:"Show", titulo:"Noite de Forró Eletrônico", local:"Galpão da Aldeota", hora:"22h", preco:"R$ 40–70" },
+      { tipo:"Música ao vivo", titulo:"Trio de MPB no bar", local:"Bar do Beco", hora:"20h", preco:"Entrada franca" },
+      { tipo:"Teatro", titulo:"Peça: \"A Última Sessão\"", local:"Teatro São José", hora:"19h30", preco:"R$ 30" },
+      { tipo:"Stand-up", titulo:"Open Mic de Comédia", local:"Quintal Cultural", hora:"21h", preco:"R$ 20" }
+    ],
+    "Recife": [
+      { tipo:"Show", titulo:"Maracatu na Praça", local:"Praça do Arsenal", hora:"21h", preco:"Entrada franca" },
+      { tipo:"Música ao vivo", titulo:"Jazz no terraço", local:"Terraço Boa Vista", hora:"20h30", preco:"R$ 25" },
+      { tipo:"Teatro", titulo:"Monólogo \"Retirantes\"", local:"Teatro Santa Isabel", hora:"19h", preco:"R$ 35" },
+      { tipo:"Stand-up", titulo:"Comédia de Improviso", local:"Casa Amarela Clube", hora:"21h30", preco:"R$ 25" }
+    ],
+    "Salvador": [
+      { tipo:"Show", titulo:"Axé ao vivo no Pelô", local:"Largo do Pelourinho", hora:"22h", preco:"Entrada franca" },
+      { tipo:"Música ao vivo", titulo:"Samba de roda", local:"Casa do Samba", hora:"20h", preco:"R$ 20" },
+      { tipo:"Teatro", titulo:"\"Orixás\" — espetáculo", local:"Teatro Castro Alves", hora:"19h30", preco:"R$ 45" },
+      { tipo:"Stand-up", titulo:"Stand-up na Barra", local:"Clube da Barra", hora:"21h", preco:"R$ 30" }
+    ],
+    "Rio de Janeiro": [
+      { tipo:"Show", titulo:"Bloco de Rua Noturno", local:"Lapa", hora:"22h", preco:"Entrada franca" },
+      { tipo:"Música ao vivo", titulo:"Roda de choro", local:"Bar Semente", hora:"20h", preco:"R$ 30" },
+      { tipo:"Teatro", titulo:"\"Cidade Partida\"", local:"Teatro Rival", hora:"19h", preco:"R$ 50" },
+      { tipo:"Stand-up", titulo:"Comédia na Lapa", local:"Circo Voador", hora:"21h30", preco:"R$ 40" }
+    ],
+    "São Paulo": [
+      { tipo:"Show", titulo:"Rock Independente", local:"Galeria do Rock", hora:"22h30", preco:"R$ 50–90" },
+      { tipo:"Música ao vivo", titulo:"Bossa nova no bar", local:"Vila Madalena Jazz Bar", hora:"20h", preco:"R$ 35" },
+      { tipo:"Teatro", titulo:"\"Metrópole\" — peça", local:"Teatro Municipal", hora:"20h", preco:"R$ 60" },
+      { tipo:"Stand-up", titulo:"Clube da Comédia", local:"Zona Cerqueira César", hora:"21h", preco:"R$ 45" }
+    ],
+    "Belo Horizonte": [
+      { tipo:"Show", titulo:"Boteco com banda ao vivo", local:"Savassi", hora:"21h", preco:"Entrada franca" },
+      { tipo:"Música ao vivo", titulo:"Violão e voz", local:"Café com Letras", hora:"19h30", preco:"R$ 20" },
+      { tipo:"Teatro", titulo:"\"Mineiridade\" — espetáculo", local:"Teatro Marília", hora:"19h", preco:"R$ 30" },
+      { tipo:"Stand-up", titulo:"Riso Mineiro", local:"Bar do Baiano", hora:"21h30", preco:"R$ 25" }
+    ]
+  };
+
+  // ---------- bulbs decoration ----------
+  var bulbsEl = document.getElementById("bulbs");
+  var positions = [
+    [2,6],[18,3],[34,4],[50,3],[66,4],[82,3],[97,7],
+    [2,60],[97,55],
+    [4,96],[20,97],[36,96],[52,97],[68,96],[84,97],[97,94]
+  ];
+  positions.forEach(function(p, i){
+    var s = document.createElement("span");
+    s.style.left = p[0] + "%";
+    s.style.top = p[1] + "%";
+    s.style.animationDelay = (i * 0.12) + "s";
+    bulbsEl.appendChild(s);
+  });
+
+  // ---------- populate selects ----------
+  var cidadeSel = document.getElementById("cidade");
+  var cidadeListaSel = document.getElementById("cidade-lista");
+  CIDADES.forEach(function(c){
+    var o1 = document.createElement("option"); o1.value = c; o1.textContent = c;
+    cidadeSel.appendChild(o1);
+    var o2 = document.createElement("option"); o2.value = c; o2.textContent = c;
+    cidadeListaSel.appendChild(o2);
+  });
+
+  var dataInput = document.getElementById("data");
+  var hoje = new Date();
+  dataInput.value = hoje.toISOString().slice(0,10);
+
+  // ---------- render results ----------
+  var grid = document.getElementById("card-grid");
+  var note = document.getElementById("results-note");
+
+  function fmtDataLegivel(iso){
+    if(!iso) return "";
+    var d = new Date(iso + "T12:00:00");
+    return d.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
+  }
+
+  function renderResultados(cidade, dataIso){
+    var lista = EVENTOS[cidade] || [];
+    grid.innerHTML = "";
+    note.textContent = lista.length
+      ? ("mostrando " + lista.length + " programas em " + cidade + " · " + fmtDataLegivel(dataIso))
+      : "sem exemplos cadastrados para essa cidade ainda.";
+
+    lista.forEach(function(ev){
+      var tipoInfo = TIPOS[ev.tipo] || { cor: "var(--text-dim)" };
+      var card = document.createElement("article");
+      card.className = "ticket";
+      card.innerHTML =
+        '<div class="ticket-top">' +
+          '<span class="type-badge"><span class="dot" style="background:' + tipoInfo.cor + '"></span>' + ev.tipo + '</span>' +
+          '<h3>' + ev.titulo + '</h3>' +
+          '<p class="venue">' + ev.local + ' · ' + cidade + '</p>' +
+          '<p class="when">' + fmtDataLegivel(dataIso) + ' · ' + ev.hora + '</p>' +
+        '</div>' +
+        '<div class="ticket-stub">' +
+          '<span class="price">' + ev.preco + '</span>' +
+          '<button class="go-btn" type="button">Quero ir</button>' +
+        '</div>';
+      card.querySelector(".go-btn").addEventListener("click", function(){
+        abrirModal(cidade, ev.titulo);
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById("buscar").addEventListener("click", function(){
+    renderResultados(cidadeSel.value, dataInput.value);
+  });
+  document.getElementById("cta-demo").addEventListener("click", function(){
+    document.getElementById("demo").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  document.getElementById("cta-lista").addEventListener("click", function(){
+    document.getElementById("lista").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  renderResultados(cidadeSel.value, dataInput.value);
+
+  // ---------- modal ----------
+  var overlay = document.getElementById("modal-overlay");
+  var modalSub = document.getElementById("modal-sub");
+  var modalForm = document.getElementById("modal-form");
+  var modalMsg = document.getElementById("modal-msg");
+  var modalCtx = { cidade: null, evento: null };
+
+  function abrirModal(cidade, evento){
+    modalCtx = { cidade: cidade, evento: evento };
+    modalSub.textContent = 'Ainda estamos validando o "' + evento + '" e outros programas em ' + cidade + '. Deixe seu e-mail que avisamos quando o app existir.';
+    modalMsg.className = "signup-msg";
+    modalForm.reset();
+    overlay.hidden = false;
+  }
+  function fecharModal(){ overlay.hidden = true; }
+  document.getElementById("modal-close").addEventListener("click", fecharModal);
+  overlay.addEventListener("click", function(e){ if(e.target === overlay) fecharModal(); });
+
+  // ---------- db capability + counter ----------
+  var db = null;
+  var localCount = 0;
+
+  function lerLocalCount(){
+    try{
+      var v = window.localStorage.getItem("vira-a-noite:local-count");
+      return v ? parseInt(v, 10) || 0 : 0;
+    }catch(e){ return 0; }
+  }
+  function gravarLocalCount(n){
+    try{ window.localStorage.setItem("vira-a-noite:local-count", String(n)); }catch(e){}
+  }
+  localCount = lerLocalCount();
+
+  var counterWrap = document.getElementById("counter-wrap");
+  var counterNum = document.getElementById("counter-num");
+
+  function mostrarContador(n){
+    counterNum.textContent = String(n);
+    counterWrap.hidden = false;
+  }
+
+  async function registrarInteresse(dados){
+    // dados: { nome, email, cidade, evento }
+    if(db){
+      try{
+        await db.collection("interessados").add({
+          nome: dados.nome || "",
+          email: dados.email,
+          cidade: dados.cidade || "",
+          evento_interesse: dados.evento || "",
+          criadoEm: new Date().toISOString()
+        });
+        return { ok: true, modo: "db" };
+      }catch(err){
+        // segue para fallback local
+      }
+    }
+    localCount += 1;
+    gravarLocalCount(localCount);
+    return { ok: true, modo: "local" };
+  }
+
+  async function iniciarDb(){
+    try{
+      if(window.claude && typeof window.claude.use === "function"){
+        db = await window.claude.use("db");
+      }
+    }catch(e){ db = null; }
+
+    if(db){
+      try{
+        db.collection("interessados").onSnapshot(function(snap){
+          mostrarContador(snap.size);
+        }, function(){ /* subscription error: leave counter hidden */ });
+      }catch(e){}
+    }else if(localCount > 0){
+      mostrarContador(localCount);
+    }
+  }
+  iniciarDb();
+
+  // ---------- form handlers ----------
+  function validarEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  document.getElementById("signup-form").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var email = document.getElementById("email").value.trim();
+    var nome = document.getElementById("nome").value.trim();
+    var cidade = cidadeListaSel.value;
+    var msg = document.getElementById("signup-msg");
+
+    if(!validarEmail(email)){
+      msg.textContent = "Confira o e-mail digitado.";
+      msg.className = "signup-msg show err";
+      return;
+    }
+    var r = await registrarInteresse({ nome: nome, email: email, cidade: cidade });
+    msg.textContent = "Prontinho! Avisamos você assim que tivermos novidades em " + cidade + ".";
+    msg.className = "signup-msg show ok";
+    this.reset();
+    cidadeListaSel.value = cidade;
+  });
+
+  modalForm.addEventListener("submit", async function(e){
+    e.preventDefault();
+    var email = document.getElementById("modal-email").value.trim();
+    var nome = document.getElementById("modal-nome").value.trim();
+
+    if(!validarEmail(email)){
+      modalMsg.textContent = "Confira o e-mail digitado.";
+      modalMsg.className = "signup-msg show err";
+      return;
+    }
+    var r = await registrarInteresse({ nome: nome, email: email, cidade: modalCtx.cidade, evento: modalCtx.evento });
+    modalMsg.textContent = "Anotado! Avisamos você sobre " + modalCtx.evento + " e outros programas em " + modalCtx.cidade + ".";
+    modalMsg.className = "signup-msg show ok";
+    setTimeout(fecharModal, 1600);
+  });
+
+})();
+</script>
+
+</body></html>
